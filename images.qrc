@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/rCsXl.png</file>
+        <file>Resources/circle-with-degrees.jpg</file>
+    </qresource>
+</RCC>
