@@ -18,8 +18,6 @@ class MainWindow : public QMainWindow
     ArduinoController *m_arduinoController;
     AngleViewerControllerWidget *m_angleViewerControllerWidget1;
     AngleViewerControllerWidget *m_angleViewerControllerWidget2;
-    AngleViewerControllerWidget *m_angleViewerControllerWidget3;
-    AngleViewerControllerWidget *m_angleViewerControllerWidget4;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -30,6 +28,7 @@ private:
 
 public slots:
     void ReadArduinoData();
+    void ReadArduinoDataAsString();
 
 };
 

@@ -16,10 +16,9 @@ Worker::~Worker() {
 void Worker::process() { // Process. Start processing data.
 
     while(true) {
+        emit readArduinoTime();
 
-       emit readArduinoTime();
-
-        QThread::msleep(100);
+        QThread::msleep(500);
     }
 
     //emit finished();

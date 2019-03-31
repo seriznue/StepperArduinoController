@@ -3,6 +3,8 @@
 #include "ArduinoController.h"
 #include "AngleViewerControllerWidget.h"
 #include <QThread>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "Worker.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,10 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Worker* worker = new Worker();
 
-    m_angleViewerControllerWidget1 = new AngleViewerControllerWidget(m_arduinoController);
+    m_angleViewerControllerWidget1 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_HORIZONTAL, m_arduinoController);
     ui->horizontalLayout->addWidget(m_angleViewerControllerWidget1);
 
-    m_angleViewerControllerWidget2 = new AngleViewerControllerWidget(m_arduinoController);
+    m_angleViewerControllerWidget2 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_VERTICAL, m_arduinoController);
     ui->horizontalLayout->addWidget(m_angleViewerControllerWidget2);
 
     QThread* thread = new QThread;
@@ -50,9 +52,32 @@ void MainWindow::ReadArduinoData()
     {
         QByteArray data;
         if(m_arduinoController->Read(data)==0) {
+            //QString arduOutAsStr = QString::fromStdString(data.toStdString());
+            QJsonDocument doc = QJsonDocument::fromJson(data);
+            //get the jsonObject
+            QJsonObject jObject = doc.object();
+
+            QVariantMap mainMap = jObject.toVariantMap();
+            //QVariantMap mainMap = QVariant(data).toMap();
+            const QList<QVariant> &stepperVariantList = mainMap["steppers"].toList();
+            if (stepperVariantList.isEmpty())
+                return;
+
+            m_angleViewerControllerWidget1->UpdateGUIFromArduinoData(stepperVariantList[0]);
+            m_angleViewerControllerWidget2->UpdateGUIFromArduinoData(stepperVariantList[1]);
+        }
+    }
+}
+
+
+void MainWindow::ReadArduinoDataAsString()
+{
+    if( m_arduinoController->Write("3\n") == 0)
+    {
+        QByteArray data;
+        if(m_arduinoController->Read(data)==0) {
             QString arduOutAsStr = QString::fromStdString(data.toStdString());
             m_angleViewerControllerWidget1->UpdateGUIFromArduinoData(arduOutAsStr);
-            m_angleViewerControllerWidget2->UpdateGUIFromArduinoData(arduOutAsStr);
         }
     }
 }

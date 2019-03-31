@@ -3,12 +3,16 @@
 #include "ArduinoController.h"
 #include "ui_AngleViewerControllerWidget.h"
 
-static const char* ADVANCE_CHAR = "1\n";
-static const char* REGRESS_CHAR = "2\n";
-static const char* READ_CHAR    = "3\n";
+static const char* ADVANCE_H = "1\n";
+static const char* REGRESS_H = "2\n";
+static const char* ADVANCE_V = "4\n";
+static const char* REGRESS_V = "5\n";
 
-AngleViewerControllerWidget::AngleViewerControllerWidget(ArduinoController *arduinoController, QWidget *parent) :
+//static const char* READ    = "3\n";
+
+AngleViewerControllerWidget::AngleViewerControllerWidget(AngleControllerType angleControllerType, ArduinoController *arduinoController, QWidget *parent) :
     QWidget(parent),
+    m_angleControllerType(angleControllerType),
     m_arduinoController(arduinoController),
     m_angleViewerWidget(new AngleViewerWidget()),
     ui(new Ui::AngleViewerControllerWidget)
@@ -57,12 +61,36 @@ void AngleViewerControllerWidget::UpdateGUIFromArduinoData(QString arduOutAsStr)
     }
 }
 
+void AngleViewerControllerWidget::UpdateGUIFromArduinoData(const QVariant &arduOutAsVariant)
+{
+    const QVariantMap &map = arduOutAsVariant.toMap();
+
+    ui->angleLabel->setText("Angle = " + map["angle"].toString() + " º");
+    m_angleViewerWidget->SetAngle(map["angle"].toDouble());
+    ui->stepLabel->setText("Steps = " + map["steps"].toString());
+    ui->valueLabel->setText("Pothenciometter value = " + map["value"].toString());
+    ui->pothenciometterHorizontalSlider->setValue(map["value"].toInt());
+    ui->stepsPerRoundLabel->setText("Steps per round : " + map["steps_per_round"].toString());
+    ui->bobbinsLabel->setText("Bobbins : " + map["bobinas"].toString());
+}
+
 void AngleViewerControllerWidget::Advance()
 {
-    m_arduinoController->Write(ADVANCE_CHAR);
+    if (m_angleControllerType == ANGLE_CONTROLLER_HORIZONTAL)
+        m_arduinoController->Write(ADVANCE_H);
+    else
+        m_arduinoController->Write(ADVANCE_V);
 }
 
 void AngleViewerControllerWidget::Regress()
 {
-    m_arduinoController->Write(REGRESS_CHAR);
+    if (m_angleControllerType == ANGLE_CONTROLLER_HORIZONTAL)
+        m_arduinoController->Write(REGRESS_H);
+    else
+        m_arduinoController->Write(REGRESS_V);
+}
+
+int AngleViewerControllerWidget::GetSliderValue() const
+{
+     return ui->pothenciometterHorizontalSlider->value();
 }

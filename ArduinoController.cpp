@@ -5,7 +5,7 @@
 
 ArduinoController::ArduinoController()
 {
-    arduino = 0;
+    arduino = nullptr;
     FindAndConnect();
 }
 
@@ -33,7 +33,7 @@ void ArduinoController::_Initialize()
     arduino_port = "";
     if (arduino) {
         delete arduino;
-        arduino = 0;
+        arduino = nullptr;
     }
     arduino = new QSerialPort;
 }
@@ -103,9 +103,7 @@ int ArduinoController::Read(QByteArray &data)
 {
     if(available && arduino->isReadable()) {
         if(arduino->isReadable()) {
-            // QByteArray datoLeido = arduino->read(2);
             data = arduino->readAll();
-            // int DatoEntero = datoLeido.toHex().toInt(0,16);
             return 0;
         }
     }
@@ -117,6 +115,6 @@ ArduinoController::~ArduinoController()
 {
     if (arduino) {
         delete arduino;
-        arduino = 0;
+        arduino = nullptr;
     }
 }

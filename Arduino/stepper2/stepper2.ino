@@ -49,42 +49,40 @@ void loop()
    
     if(numeroEntero == 1){
       position = 99;
-      stepper(true); // Avanza un paso
+      doStep(true); // Avanza un paso
     }
     else if(numeroEntero == 2){
       position = 1;
-      stepper(false); // Avanza un paso
+      doStep(false); // Avanza un paso
     }
     else if(numeroEntero == 3){
-      printStepperInfo();   
+      printSteppersInfo();  
+      delay (5) ; 
     }    
     cadenaCharEntrada = "";
-    
   } 
   else {  
-      value = analogRead(analogPin); // realizar la lectura analógica raw
-      position = map(value, 0, 1023, 1, 99); // convertir a porcentaje
-      
-      if(position > 55 || position < 45) {      
-        if(position == 0) {
-          position = 1;      
-        }
-        else if(position == 100) {
-          position = 99;
-        }
-        delayValue = 100/(float)(abs((position - 50)));     
-        bool forward = position > 50;
-        stepper(forward); // Avanza un paso
-        delay (delayValue) ; //Un paso cada 250 ms para ver los leds
-      } 
+    value = analogRead(analogPin); // realizar la lectura analógica raw
+    position = map(value, 0, 1023, 1, 99); // convertir a porcentaje
+    
+    if(position > 55 || position < 45) {      
+      if(position == 0) {
+        position = 1;      
+      }
+      else if(position == 100) {
+        position = 99;
+      }
+      delayValue = 100/(float)(abs((position - 50)));     
+      bool forward = position > 50;
+      doStep(forward); // Avanza un paso
+      delay (delayValue) ; //Un paso cada 250 ms para ver los leds
+    } 
   }
-
 }
 
 
-void stepper(bool forward) //Avanza un paso                                                                                                                                 
+void doStep(bool forward) //Avanza un paso                                                                                                                                 
 {
-
   digitalWrite( IN1, Paso[steps % 8][ 0] );  
   digitalWrite( IN2, Paso[steps % 8][ 1] );  
   digitalWrite( IN3, Paso[steps % 8][ 2] );  
@@ -113,27 +111,38 @@ void stepper(bool forward) //Avanza un paso
   }
 }
 
+void printSteppersInfo() {
+  Serial.print("{");
+  //List
+  Serial.print("\"steppers\":[");
+  //Stepper 1
+  printStepperInfo();
+  Serial.print(",");
+  //Stepper 2
+   printStepperInfo();
+  //End list
+  Serial.print("]");
+  Serial.print("}");
+  
+  }
+
 void printStepperInfo() {
-  Serial.print("angle="); 
+  Serial.print("{");
+  Serial.print("\"angle\":"); 
   Serial.print(angle); 
-  Serial.print(";"); 
-  Serial.print("steps="); 
+  Serial.print(","); 
+  Serial.print("\"steps\":"); 
   Serial.print(steps); 
-  Serial.print(";"); 
-  Serial.print("steps_per_round="); 
+  Serial.print(","); 
+  Serial.print("\"steps_per_round\":"); 
   Serial.print(steps_per_round); 
-  Serial.print(";"); 
-  Serial.print("value="); 
+  Serial.print(","); 
+  Serial.print("\"value\":"); 
   Serial.print(value); 
-  Serial.print(";"); 
-  Serial.print("angle="); 
+  Serial.print(","); 
+  Serial.print("\"angle\":"); 
   Serial.print(angle); 
-  Serial.print(";"); 
-  Serial.print("bobinas=");
-  Serial.print(Paso[steps % 8][0]);
-  Serial.print(Paso[steps % 8][1]);
-  Serial.print(Paso[steps % 8][2]);
-  Serial.print(Paso[steps % 8][3]);    
+  Serial.print("}");  
 }
 
 void serialEvent(){
