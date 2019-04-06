@@ -18,11 +18,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Worker* worker = new Worker();
 
-    m_angleViewerControllerWidget1 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_HORIZONTAL, m_arduinoController);
+    m_angleViewerControllerWidget1 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_HORIZONTAL);
     ui->horizontalLayout->addWidget(m_angleViewerControllerWidget1);
 
-    m_angleViewerControllerWidget2 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_VERTICAL, m_arduinoController);
+    m_angleViewerControllerWidget2 = new AngleViewerControllerWidget(ANGLE_CONTROLLER_VERTICAL);
     ui->horizontalLayout->addWidget(m_angleViewerControllerWidget2);
+
+    connect(m_angleViewerControllerWidget1, SIGNAL (writeOnArduino(const char*)), m_arduinoController, SLOT (Write(const char*)));
+    connect(m_angleViewerControllerWidget2, SIGNAL (writeOnArduino(const char*)), m_arduinoController, SLOT (Write(const char*)));
 
     QThread* thread = new QThread;
     worker->moveToThread(thread);

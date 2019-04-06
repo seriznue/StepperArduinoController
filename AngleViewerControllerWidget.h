@@ -21,11 +21,10 @@ class AngleViewerControllerWidget : public QWidget
     Q_OBJECT
 
     AngleControllerType m_angleControllerType;
-    ArduinoController *m_arduinoController;
     AngleViewerWidget *m_angleViewerWidget;
 
 public:
-    explicit AngleViewerControllerWidget(AngleControllerType angleControllerType, ArduinoController *arduinoController, QWidget *parent = nullptr);
+    explicit AngleViewerControllerWidget(AngleControllerType angleControllerType, QWidget *parent = nullptr);
     ~AngleViewerControllerWidget();
     int GetSliderValue() const;
 
@@ -34,6 +33,8 @@ public slots:
     void UpdateGUIFromArduinoData(const QVariant &arduOutAsVariant);
     void Advance();
     void Regress();
+signals:
+    void writeOnArduino(const char*);
 
 private:
     Ui::AngleViewerControllerWidget *ui;

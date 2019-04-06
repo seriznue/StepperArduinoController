@@ -1,6 +1,5 @@
 #include "AngleViewerControllerWidget.h"
 #include "AngleViewerWidget.h"
-#include "ArduinoController.h"
 #include "ui_AngleViewerControllerWidget.h"
 
 static const char* ADVANCE_H = "1\n";
@@ -10,10 +9,9 @@ static const char* REGRESS_V = "5\n";
 
 //static const char* READ    = "3\n";
 
-AngleViewerControllerWidget::AngleViewerControllerWidget(AngleControllerType angleControllerType, ArduinoController *arduinoController, QWidget *parent) :
+AngleViewerControllerWidget::AngleViewerControllerWidget(AngleControllerType angleControllerType, QWidget *parent) :
     QWidget(parent),
     m_angleControllerType(angleControllerType),
-    m_arduinoController(arduinoController),
     m_angleViewerWidget(new AngleViewerWidget()),
     ui(new Ui::AngleViewerControllerWidget)
 {
@@ -77,17 +75,17 @@ void AngleViewerControllerWidget::UpdateGUIFromArduinoData(const QVariant &arduO
 void AngleViewerControllerWidget::Advance()
 {
     if (m_angleControllerType == ANGLE_CONTROLLER_HORIZONTAL)
-        m_arduinoController->Write(ADVANCE_H);
+        emit writeOnArduino(ADVANCE_H);
     else
-        m_arduinoController->Write(ADVANCE_V);
+        emit writeOnArduino(ADVANCE_V);
 }
 
 void AngleViewerControllerWidget::Regress()
 {
     if (m_angleControllerType == ANGLE_CONTROLLER_HORIZONTAL)
-        m_arduinoController->Write(REGRESS_H);
+        emit writeOnArduino(REGRESS_H);
     else
-        m_arduinoController->Write(REGRESS_V);
+        emit writeOnArduino(REGRESS_V);
 }
 
 int AngleViewerControllerWidget::GetSliderValue() const
