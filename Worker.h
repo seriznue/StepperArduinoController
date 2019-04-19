@@ -6,7 +6,9 @@ class ArduinoController;
 
 class Worker : public QObject
 {
-    Q_OBJECT
+   Q_OBJECT
+
+   bool m_enabled;
 
 public:
     Worker();
@@ -14,6 +16,8 @@ public:
     ~Worker();
 public slots:
     void process();
+
+    void SetEnabled(bool enabled) { m_enabled = enabled; }
 
 signals:
     void readArduinoTime();

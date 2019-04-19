@@ -4,7 +4,7 @@
 #include "ArduinoController.h"
 #include "MainWindow.h"
 
-Worker::Worker()
+Worker::Worker() : m_enabled(true)
 {
     // you could copy data from constructor arguments to internal variables here.
 }
@@ -16,8 +16,10 @@ Worker::~Worker() {
 void Worker::process() { // Process. Start processing data.
 
     while(true) {
-        emit readArduinoTime();
-
+       if (m_enabled) {
+          emit readArduinoTime();
+       }
+       
         QThread::msleep(500);
     }
 

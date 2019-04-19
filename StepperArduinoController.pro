@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +30,8 @@ SOURCES += \
     ArduinoController.cpp \
     Worker.cpp \
     AngleViewerWidget.cpp \
-    AngleViewerControllerWidget.cpp
+    AngleViewerControllerWidget.cpp \
+    CameraWidget.cpp
 
 HEADERS += \
         MainWindow.h \
@@ -38,11 +39,13 @@ HEADERS += \
     qtarduinocontrollerlib_global.h \
     Worker.h \
     AngleViewerWidget.h \
-    AngleViewerControllerWidget.h
+    AngleViewerControllerWidget.h \
+    CameraWidget.h
 
 FORMS += \
         MainWindow.ui \
-    AngleViewerControllerWidget.ui
+    AngleViewerControllerWidget.ui \
+    CameraWidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -50,4 +53,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    camera.qrc

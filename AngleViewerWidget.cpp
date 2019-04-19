@@ -9,7 +9,7 @@ AngleViewerWidget::AngleViewerWidget(): QGraphicsView (),
 
     image.load(":/Resources/circle-with-degrees.jpg");
 
-    image = image.scaled(350, 350);
+    image = image.scaled(250, 250);
 
     QPixmap pixmap = QPixmap::fromImage(image);
 
